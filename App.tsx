@@ -1,44 +1,115 @@
-import React, { useState, useEffect } from 'react';
-import { View, ActivityIndicator, Dimensions } from 'react-native';
-import { Avatar, Badge, Button, ButtonGroup, Card, CheckBox, Divider, Image, Input } from 'react-native-elements';
+import React from 'react';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator, StackHeaderProps } from 'react-navigation-stack';
+import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer';
+import { View, Text } from 'react-native';
+import { Icon, Header } from 'react-native-elements';
+import { StackNavigationProp } from 'react-navigation-stack/lib/typescript/src/vendor/types';
+
+interface HamburgerMenuProps {
+  navigation: StackNavigationProp;
+}
+const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
+  navigation
+}: HamburgerMenuProps) => {
+  return (
+    <Icon
+      color="#fff"
+      name="menu"
+      onPress={() => {
+        navigation.dispatch(
+          DrawerActions.openDrawer()
+        )
+      }}
+    />
+  );
+}
+
+const MyHeader: React.FC<StackHeaderProps> = ({
+  mode,
+  layout,
+  insets,
+  scene,
+  previous,
+  navigation,
+  styleInterpolator
+}: StackHeaderProps) => {
+  return (
+    <Header
+      leftComponent={<HamburgerMenu navigation={navigation} />}
+      centerComponent={{ text: 'expo-expo', style:{ color: '#fff' }}}
+    />
+  );
+}
+
+const myHeader = (props: StackHeaderProps) => {
+  return (
+    <MyHeader
+      mode={props.mode}
+      layout={props.layout}
+      insets={props.insets}
+      scene={props.scene}
+      previous={props.previous}
+      navigation={props.navigation}
+      styleInterpolator={props.styleInterpolator}
+    />
+  );
+}
+
+const Screen1: React.FC = () => {
+  return (
+    <View style={{flex:1, alignItems:'center', justifyContent: 'center'}}>
+      <Text>Screen1</Text>
+    </View>
+  );
+}
+
+const Screen2: React.FC = () => {
+  return (
+    <View style={{flex:1, alignItems:'center', justifyContent: 'center'}}>
+      <Text>Screen2</Text>
+    </View>
+  );
+}
+
+const Stack1 = createStackNavigator(
+  {
+    Stack1: {
+      screen: Screen1,
+      navigationOptions: {
+        title: "Screen1",
+        header: myHeader
+      }
+    }
+  }
+)
+
+const Stack2 = createStackNavigator(
+  {
+    Stack2: {
+      screen: Screen2,
+      navigationOptions: {
+        title: "Screen2",
+        header: myHeader
+      }
+    }
+  }
+)
+
+const Drawer = createDrawerNavigator(
+  {
+    Screen1: {screen: Stack1},
+    Screen2: {screen: Stack2},
+  },
+  {
+    initialRouteName: 'Screen1'
+  }
+);
 
 const App: React.FC = () => {
-  const [text1, setText1] = useState<string>('');
-  const  [selectedIdx, setSelectedIdx] = useState<number>(0);
-  const  buttons = ['What', 'the', 'Fuck'];
+  const Layout = createAppContainer(Drawer);
   return (
-    <View style={{flex:1, paddingVertical: 80}}>
-      <Card>
-        <Card.Title>expo-expo</Card.Title>
-        <View style={{width:80, marginLeft: 10}}>
-          <Avatar
-            containerStyle={{backgroundColor:'gray'}}
-            rounded
-            size="large"
-            icon={{ name: 'home' }}
-          />
-          <Badge
-            status="success"
-            value={buttons[selectedIdx]}
-            containerStyle={{ position: 'absolute', top: -5, right: -5 }}
-          />
-        </View>
-        <Divider style={{
-          backgroundColor: 'gray',
-          margin:10,
-          height:1,
-          }}
-        />
-        <ButtonGroup
-          onPress={(i)=>{
-            setSelectedIdx(i)
-          }}
-          selectedIndex={selectedIdx}
-          buttons={buttons}
-          containerStyle={{height: 40}}
-        />
-      </Card>
-    </View>
+    <Layout />
   );
 }
 
