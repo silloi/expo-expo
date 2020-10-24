@@ -26,11 +26,6 @@ const HamburgerMenu: React.FC<HamburgerMenuProps> = ({
 }
 
 const MyHeader: React.FC<StackHeaderProps> = ({
-  mode,
-  layout,
-  insets,
-  scene,
-  previous,
   navigation,
   styleInterpolator
 }: StackHeaderProps) => {
@@ -38,20 +33,6 @@ const MyHeader: React.FC<StackHeaderProps> = ({
     <Header
       leftComponent={<HamburgerMenu navigation={navigation} />}
       centerComponent={{ text: 'expo-expo', style:{ color: '#fff' }}}
-    />
-  );
-}
-
-const myHeader = (props: StackHeaderProps) => {
-  return (
-    <MyHeader
-      mode={props.mode}
-      layout={props.layout}
-      insets={props.insets}
-      scene={props.scene}
-      previous={props.previous}
-      navigation={props.navigation}
-      styleInterpolator={props.styleInterpolator}
     />
   );
 }
@@ -78,7 +59,7 @@ const Stack1 = createStackNavigator(
       screen: Screen1,
       navigationOptions: {
         title: "Screen1",
-        header: myHeader
+        header: MyHeader
       }
     }
   }
@@ -90,7 +71,7 @@ const Stack2 = createStackNavigator(
       screen: Screen2,
       navigationOptions: {
         title: "Screen2",
-        header: myHeader
+        header: MyHeader
       }
     }
   }
